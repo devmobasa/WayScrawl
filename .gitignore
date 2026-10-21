@@ -1,0 +1,9 @@
+.dotnet/
+.cache/
+.artifacts/
+**/bin/
+**/obj/
+*.wayscrawl/
+.dotnet-bootstrap.lock
+.dotnet-bootstrap-*/
+.claude/worktrees/

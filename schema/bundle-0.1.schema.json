@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wayscrawl:bundle:0.1",
+  "title": "WayScrawl evidence manifest 0.1",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "synthetic",
+    "createdUtc",
+    "durationUs",
+    "geometry",
+    "strokes",
+    "events",
+    "transcript",
+    "keyframes",
+    "capabilities",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "wayscrawl.bundle/0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "createdUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "durationUs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "geometry": {
+      "$ref": "#/$defs/geometry"
+    },
+    "strokes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stroke"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transcript"
+      }
+    },
+    "keyframes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/keyframe"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "geometry": {
+      "type": "object",
+      "required": [
+        "id",
+        "logicalX",
+        "logicalY",
+        "logicalWidth",
+        "logicalHeight",
+        "pixelWidth",
+        "pixelHeight"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logicalX": {
+          "type": "number"
+        },
+        "logicalY": {
+          "type": "number"
+        },
+        "logicalWidth": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "logicalHeight": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "pixelWidth": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pixelHeight": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "stroke": {
+      "type": "object",
+      "required": [
+        "id",
+        "geometryId",
+        "color",
+        "width",
+        "points"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometryId": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "points": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "kind",
+        "detail"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "transcript": {
+      "type": "object",
+      "required": [
+        "startUs",
+        "endUs",
+        "text",
+        "timing"
+      ],
+      "properties": {
+        "startUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "timing": {
+          "enum": [
+            "Unavailable",
+            "Estimated",
+            "MeasuredSegment",
+            "MeasuredWord",
+            "Synthetic"
+          ]
+        }
+      }
+    },
+    "keyframe": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "path",
+        "geometryId",
+        "reason"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^frames/[^/\\\\:]+\\.png$"
+        },
+        "geometryId": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "detail"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "Unknown",
+            "Unsupported",
+            "Available",
+            "Denied",
+            "NotImplemented"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../WayScrawl.Core/WayScrawl.Core.csproj" />
+    <ProjectReference Include="../WayScrawl.Platform/WayScrawl.Platform.csproj" />
+    <ProjectReference Include="../WayScrawl.Rendering/WayScrawl.Rendering.csproj" />
+  </ItemGroup>
+</Project>

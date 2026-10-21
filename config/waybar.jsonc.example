@@ -1,0 +1,17 @@
+// Merge this module into your Waybar config; add custom/wayscrawl to a modules-* list.
+// The bar appears in recordings of its monitor. No user config is edited by install.sh.
+{
+  "custom/wayscrawl": {
+    "exec": "wayscrawl status --waybar --follow",
+    "return-type": "json",
+    "escape": true,
+    "restart-interval": 2,
+    "on-click": "wayscrawl toggle",
+    "on-click-right": "wayscrawl draw toggle",
+    "tooltip": true
+  }
+}
+// CSS: #custom-wayscrawl.recording { color: #ff3b30; }
+// #custom-wayscrawl.drawing, #custom-wayscrawl.holding { color: #ffcc00; }
+// #custom-wayscrawl.processing { color: #0a84ff; }
+// Idle/offline text is empty; classes are idle/offline, respectively.

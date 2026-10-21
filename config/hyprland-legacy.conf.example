@@ -1,0 +1,10 @@
+# WayScrawl shortcuts for Hyprland's legacy hyprlang configuration (before 0.55).
+bind = SUPER ALT SHIFT, R, exec, wayscrawl toggle
+bind = SUPER ALT SHIFT, D, exec, wayscrawl draw toggle
+# unbind = SUPER SHIFT ALT, M # Omarchy Music TUI; after defaults
+bind = SUPER ALT SHIFT, M, exec, wayscrawl marker
+# unbind = SUPER SHIFT ALT, X # Omarchy X Post; after defaults
+bind = SUPER ALT SHIFT, X, exec, wayscrawl cancel
+bind = SUPER ALT SHIFT, C, exec, wayscrawl clear
+bind = SUPER ALT SHIFT, Z, exec, wayscrawl undo
+bind = SUPER ALT SHIFT, V, exec, wayscrawl paste

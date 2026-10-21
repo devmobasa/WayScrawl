@@ -1,0 +1,15 @@
+-- WayScrawl shortcuts for Hyprland's Lua configuration (0.55 and later).
+-- Copy into your bindings file AFTER Omarchy defaults. Uncomment the unbinds on Omarchy.
+-- Modifier order in unbind must match Omarchy exactly.
+hl.bind("SUPER + ALT + SHIFT + R", hl.dsp.exec_cmd("wayscrawl toggle"))      -- start / stop recording
+hl.bind("SUPER + ALT + SHIFT + D", hl.dsp.exec_cmd("wayscrawl draw toggle")) -- draw while recording (Esc leaves)
+-- hl.unbind("SUPER + SHIFT + ALT + M") -- Omarchy Music TUI
+-- Mark this moment; it is always kept as a keyframe (moments within 400 ms can share one).
+hl.bind("SUPER + ALT + SHIFT + M", hl.dsp.exec_cmd("wayscrawl marker"))
+-- hl.unbind("SUPER + SHIFT + ALT + X") -- Omarchy X Post
+hl.bind("SUPER + ALT + SHIFT + X", hl.dsp.exec_cmd("wayscrawl cancel"))      -- discard the current recording
+-- In drawing mode: drag to draw, Ctrl+Z undo, Delete clear, M marker, 1-6 colours,
+-- Esc or right-click returns input to your applications.
+hl.bind("SUPER + ALT + SHIFT + C", hl.dsp.exec_cmd("wayscrawl clear"))
+hl.bind("SUPER + ALT + SHIFT + Z", hl.dsp.exec_cmd("wayscrawl undo"))
+hl.bind("SUPER + ALT + SHIFT + V", hl.dsp.exec_cmd("wayscrawl paste"))

@@ -1,0 +1,218 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:WayScrawl.Review"
+        x:Class="WayScrawl.Review.MainWindow"
+        x:DataType="local:MainViewModel"
+        Title="WayScrawl Review"
+        Width="1360" Height="860" MinWidth="900" MinHeight="560">
+  <Window.Styles>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="#9AA3AD" />
+    </Style>
+    <Style Selector="TextBlock.error">
+      <Setter Property="Foreground" Value="#FF7B72" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="15" />
+      <Setter Property="MinHeight" Value="36" />
+    </Style>
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,4,0,4" />
+    </Style>
+    <Style Selector="Button.recording">
+      <Setter Property="Background" Value="#B3261E" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.drawing">
+      <Setter Property="Background" Value="#1F6FEB" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+  </Window.Styles>
+
+  <Window.DataTemplates>
+    <!-- Transcript segments, timeline events and capabilities share one layout. -->
+    <DataTemplate DataType="local:Row" x:DataType="local:Row">
+      <Grid ColumnDefinitions="180,*" Margin="0,3">
+        <TextBlock Text="{Binding Lead}" Classes="muted" TextWrapping="Wrap" Margin="0,0,12,0" />
+        <StackPanel Grid.Column="1" Spacing="1">
+          <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Note}" Classes="muted" FontSize="11" />
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
+  </Window.DataTemplates>
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Background="#1C1F24" BorderBrush="#2B2F36" BorderThickness="0,0,0,1" Padding="10,8">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Button Content="Refresh" Command="{Binding RefreshCommand}" ToolTip.Tip="Rescan the bundles folder" />
+          <Button Content="Copy for agent" Command="{Binding CopyCommand}"
+                  ToolTip.Tip="Copy a prompt that points a coding agent at this bundle" />
+          <Button Content="Open folder" Command="{Binding OpenFolderCommand}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="{Binding Recorder.StatusText}" HorizontalAlignment="Right" />
+            <TextBlock Text="{Binding Recorder.LastError, StringFormat='Last error: {0}'}" Classes="error" FontSize="11"
+                       MaxWidth="420" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right"
+                       ToolTip.Tip="{Binding Recorder.LastError}"
+                       IsVisible="{Binding Recorder.LastError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+          <Button Content="{Binding Recorder.RecordLabel}" Command="{Binding Recorder.ToggleCommand}"
+                  Classes.recording="{Binding Recorder.IsRecording}" MinWidth="96"
+                  ToolTip.Tip="Start or stop a recording; starts the daemon when needed" />
+          <Button Content="{Binding Recorder.DrawLabel}" Command="{Binding Recorder.DrawCommand}"
+                  Classes.drawing="{Binding Recorder.IsDrawing}" MinWidth="88"
+                  ToolTip.Tip="Toggle the drawing overlay while recording" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Background="#1C1F24" BorderBrush="#2B2F36" BorderThickness="0,1,0,0" Padding="10,4">
+      <TextBlock Text="{Binding Message}" Classes="muted" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Message}" />
+    </Border>
+
+    <Grid ColumnDefinitions="340,4,*">
+      <DockPanel Background="#16181C">
+        <TextBlock DockPanel.Dock="Top" Text="{Binding BundleRoot}" Classes="muted" FontSize="11" Margin="10,8"
+                   TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding BundleRoot}" />
+        <TextBlock DockPanel.Dock="Top" Text="{Binding EmptyText}" IsVisible="{Binding IsEmpty}" Classes="muted"
+                   TextWrapping="Wrap" Margin="10" />
+        <ListBox ItemsSource="{Binding Bundles}" SelectedItem="{Binding SelectedBundle, Mode=TwoWay}" Background="Transparent">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="local:BundleListItem">
+              <StackPanel Spacing="2" Margin="0,2">
+                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Detail}" Classes="muted" FontSize="12" />
+                <TextBlock Text="{Binding Error}" Classes="error" FontSize="12" TextWrapping="Wrap"
+                           IsVisible="{Binding !IsValid}" />
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="#2B2F36" />
+
+      <Panel Grid.Column="2">
+        <TextBlock Text="Loading…" IsVisible="{Binding IsLoading}" Classes="muted"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding DetailsError}" Classes="error" TextWrapping="Wrap" Margin="16"
+                   IsVisible="{Binding DetailsError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <ContentControl Content="{Binding Details}">
+          <ContentControl.ContentTemplate>
+            <DataTemplate x:DataType="local:BundleViewModel">
+              <DockPanel Margin="16,12">
+                <StackPanel DockPanel.Dock="Top" Spacing="4">
+                  <SelectableTextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Subtitle}" Classes="muted" />
+                  <SelectableTextBlock Text="{Binding CompositionText}" TextWrapping="Wrap" />
+                  <Border IsVisible="{Binding HasWarnings}" Background="#3B2F10" CornerRadius="4" Padding="10,6" Margin="0,4,0,0">
+                    <ItemsControl ItemsSource="{Binding Warnings}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                          <TextBlock Text="{Binding StringFormat='Warning: {0}'}" Foreground="#F2CC60" TextWrapping="Wrap" />
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </Border>
+                </StackPanel>
+
+                <TabControl Margin="0,8,0,0">
+                  <TabItem Header="Frames">
+                    <Grid RowDefinitions="Auto,*">
+                      <ListBox ItemsSource="{Binding Frames}" SelectedItem="{Binding SelectedFrame, Mode=TwoWay}"
+                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                               ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Transparent">
+                        <ListBox.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="4" />
+                          </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                          <DataTemplate x:DataType="local:FrameItem">
+                            <StackPanel Width="180" Spacing="2">
+                              <Border Height="102" Background="#0E0F12" CornerRadius="3" ClipToBounds="True">
+                                <Panel>
+                                  <Image Source="{Binding Thumbnail.Image}" Stretch="Uniform" />
+                                  <TextBlock Text="{Binding Thumbnail.Error}" Classes="error" FontSize="11"
+                                             TextWrapping="Wrap" Margin="4" />
+                                </Panel>
+                              </Border>
+                              <TextBlock Text="{Binding Time}" FontWeight="SemiBold" />
+                              <TextBlock Text="{Binding Reason}" Classes="muted" FontSize="12"
+                                         TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Reason}" />
+                            </StackPanel>
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+
+                      <ContentControl Grid.Row="1" Content="{Binding Selected}" Margin="0,8,0,0">
+                        <ContentControl.ContentTemplate>
+                          <DataTemplate x:DataType="local:FrameDetail">
+                            <Grid ColumnDefinitions="*,*">
+                              <DockPanel Grid.ColumnSpan="{Binding FullSpan}">
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding Caption}" Classes="muted"
+                                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Caption}" Margin="0,0,0,4" />
+                                <Panel>
+                                  <Image Source="{Binding Full.Image}" Stretch="Uniform" />
+                                  <TextBlock Text="{Binding Full.Error}" Classes="error" TextWrapping="Wrap" />
+                                </Panel>
+                              </DockPanel>
+                              <DockPanel Grid.Column="1" IsVisible="{Binding HasCrop}" Margin="8,0,0,0">
+                                <TextBlock DockPanel.Dock="Top" Text="{Binding CropCaption}" Classes="muted"
+                                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding CropCaption}" Margin="0,0,0,4" />
+                                <Panel>
+                                  <Image Source="{Binding Crop.Image}" Stretch="Uniform" />
+                                  <TextBlock Text="{Binding Crop.Error}" Classes="error" TextWrapping="Wrap" />
+                                </Panel>
+                              </DockPanel>
+                            </Grid>
+                          </DataTemplate>
+                        </ContentControl.ContentTemplate>
+                      </ContentControl>
+                    </Grid>
+                  </TabItem>
+
+                  <TabItem Header="Contact sheet">
+                    <Panel>
+                      <Image Source="{Binding ContactSheet.Image}" Stretch="Uniform" StretchDirection="DownOnly"
+                             HorizontalAlignment="Left" VerticalAlignment="Top" />
+                      <TextBlock Text="{Binding ContactSheet.Error}" Classes="error" TextWrapping="Wrap" />
+                    </Panel>
+                  </TabItem>
+
+                  <TabItem Header="Transcript">
+                    <ScrollViewer>
+                      <StackPanel Spacing="8">
+                        <TextBlock Text="{Binding TranscriptNote}" Classes="muted" TextWrapping="Wrap" />
+                        <ItemsControl ItemsSource="{Binding Transcript}" />
+                      </StackPanel>
+                    </ScrollViewer>
+                  </TabItem>
+
+                  <TabItem Header="Timeline">
+                    <ScrollViewer>
+                      <ItemsControl ItemsSource="{Binding Events}" />
+                    </ScrollViewer>
+                  </TabItem>
+
+                  <TabItem Header="Capture">
+                    <ScrollViewer>
+                      <StackPanel>
+                        <TextBlock Text="Capabilities" Classes="section" />
+                        <ItemsControl ItemsSource="{Binding Capabilities}" />
+                      </StackPanel>
+                    </ScrollViewer>
+                  </TabItem>
+                </TabControl>
+              </DockPanel>
+            </DataTemplate>
+          </ContentControl.ContentTemplate>
+        </ContentControl>
+      </Panel>
+    </Grid>
+  </DockPanel>
+</Window>

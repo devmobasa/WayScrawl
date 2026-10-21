@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WayScrawl.Core/WayScrawl.Core.csproj" />
+    <Project Path="src/WayScrawl.Platform/WayScrawl.Platform.csproj" />
+    <Project Path="src/WayScrawl.Rendering/WayScrawl.Rendering.csproj" />
+    <Project Path="src/WayScrawl.Wayland/WayScrawl.Wayland.csproj" />
+    <Project Path="src/WayScrawl.Transcription/WayScrawl.Transcription.csproj" />
+    <Project Path="src/WayScrawl.Portal/WayScrawl.Portal.csproj" />
+    <Project Path="src/WayScrawl.Application/WayScrawl.Application.csproj" />
+    <Project Path="src/WayScrawl.Cli/WayScrawl.Cli.csproj" />
+    <Project Path="src/WayScrawl.Review/WayScrawl.Review.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WayScrawl.Checks/WayScrawl.Checks.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Wayland.SourceGenerator/Wayland.SourceGenerator.csproj" />
+  </Folder>
+</Solution>

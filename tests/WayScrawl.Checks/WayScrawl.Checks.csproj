@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/WayScrawl.Application/WayScrawl.Application.csproj" />
+    <ProjectReference Include="../../src/WayScrawl.Wayland/WayScrawl.Wayland.csproj" />
+    <ProjectReference Include="../../src/WayScrawl.Portal/WayScrawl.Portal.csproj" />
+    <ProjectReference Include="../../src/WayScrawl.Review/WayScrawl.Review.csproj" />
+  </ItemGroup>
+</Project>

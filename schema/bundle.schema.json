@@ -1,0 +1,814 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wayscrawl:bundle:0.3",
+  "title": "WayScrawl evidence manifest 0.3",
+  "description": "Shape only. Semantic rules (ordering, id references, time bounds, digests) are enforced by BundleRules.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "synthetic",
+    "createdUtc",
+    "durationUs",
+    "geometries",
+    "media",
+    "composition",
+    "strokes",
+    "events",
+    "sources",
+    "transcription",
+    "transcript",
+    "keyframes",
+    "omissions",
+    "capabilities",
+    "warnings",
+    "pins"
+  ],
+  "properties": {
+    "schema": {
+      "const": "wayscrawl.bundle/0.3"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "createdUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "durationUs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "geometries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/geometry"
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/media"
+      }
+    },
+    "composition": {
+      "$ref": "#/$defs/composition"
+    },
+    "strokes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stroke"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "transcription": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/transcription"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transcript"
+      }
+    },
+    "keyframes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/keyframe"
+      }
+    },
+    "omissions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/omission"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pins": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pin"
+      }
+    },
+    "windowTitles": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "$defs": {
+    "geometry": {
+      "type": "object",
+      "required": [
+        "id",
+        "logicalX",
+        "logicalY",
+        "logicalWidth",
+        "logicalHeight",
+        "pixelWidth",
+        "pixelHeight",
+        "source",
+        "transform",
+        "fromUs",
+        "toUs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logicalX": {
+          "type": "number"
+        },
+        "logicalY": {
+          "type": "number"
+        },
+        "logicalWidth": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "logicalHeight": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "pixelWidth": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pixelHeight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source": {
+          "type": "string"
+        },
+        "transform": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        },
+        "fromUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "toUs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "clock": {
+      "type": "object",
+      "required": [
+        "offsetUs",
+        "quality",
+        "clock",
+        "method",
+        "uncertaintyUs"
+      ],
+      "properties": {
+        "offsetUs": {
+          "type": "integer"
+        },
+        "quality": {
+          "enum": [
+            "Unavailable",
+            "Estimated",
+            "Measured",
+            "Synthetic"
+          ]
+        },
+        "clock": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "uncertaintyUs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "stream": {
+      "type": "object",
+      "required": [
+        "kind",
+        "codec",
+        "timeBase",
+        "firstPtsUs",
+        "durationUs",
+        "clock",
+        "width",
+        "height",
+        "framesPerSecond",
+        "sampleRate",
+        "channels"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "video",
+            "audio"
+          ]
+        },
+        "codec": {
+          "type": "string"
+        },
+        "timeBase": {
+          "type": "string"
+        },
+        "firstPtsUs": {
+          "type": "integer"
+        },
+        "durationUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "clock": {
+          "$ref": "#/$defs/clock"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "framesPerSecond": {
+          "type": "number",
+          "minimum": 0
+        },
+        "sampleRate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "channels": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "mime",
+        "bytes",
+        "sha256",
+        "finalization",
+        "backend",
+        "streams"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^media/[^/\\\\:]+$"
+        },
+        "mime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        },
+        "finalization": {
+          "enum": [
+            "complete",
+            "partial"
+          ]
+        },
+        "backend": {
+          "type": "string"
+        },
+        "streams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stream"
+          }
+        }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "required": [
+        "mode",
+        "basis"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "Unknown",
+            "CapturedInk",
+            "CleanSource",
+            "NoInk"
+          ]
+        },
+        "basis": {
+          "type": "string"
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "stroke": {
+      "type": "object",
+      "required": [
+        "id",
+        "geometryId",
+        "color",
+        "width",
+        "points",
+        "removedUs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometryId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "points": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        },
+        "removedUs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "kind",
+        "detail",
+        "source",
+        "fidelity",
+        "sequence"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fidelity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name",
+        "fidelity",
+        "received",
+        "dropped",
+        "gaps",
+        "detail"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fidelity": {
+          "type": "string"
+        },
+        "received": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dropped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gaps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "transcription": {
+      "type": "object",
+      "required": [
+        "status",
+        "engine",
+        "runtime",
+        "model",
+        "language",
+        "extraction",
+        "detail"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "engine": {
+          "type": "string"
+        },
+        "runtime": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "extraction": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "transcript": {
+      "type": "object",
+      "required": [
+        "startUs",
+        "endUs",
+        "text",
+        "timing"
+      ],
+      "properties": {
+        "startUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "timing": {
+          "enum": [
+            "Unavailable",
+            "Estimated",
+            "MeasuredSegment",
+            "MeasuredWord",
+            "Synthetic"
+          ]
+        },
+        "words": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/word"
+          }
+        }
+      }
+    },
+    "crop": {
+      "type": "object",
+      "required": [
+        "path",
+        "x",
+        "y",
+        "width",
+        "height",
+        "exportWidth",
+        "exportHeight"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^frames/[^/\\\\:]+\\.png$"
+        },
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "y": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exportWidth": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exportHeight": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "keyframe": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "path",
+        "geometryId",
+        "reason",
+        "requestedUs",
+        "ptsUs",
+        "mediaId",
+        "width",
+        "height",
+        "crop"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^frames/[^/\\\\:]+\\.png$"
+        },
+        "geometryId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requestedUs": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ptsUs": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mediaId": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "crop": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/crop"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "omission": {
+      "type": "object",
+      "required": [
+        "atUs",
+        "reason",
+        "detail"
+      ],
+      "properties": {
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "detail"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "Unknown",
+            "Unsupported",
+            "Available",
+            "Denied",
+            "NotImplemented"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "pin": {
+      "type": "object",
+      "required": [
+        "id",
+        "geometryId",
+        "number",
+        "x",
+        "y",
+        "atUs",
+        "removedUs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometryId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "atUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "removedUs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "word": {
+      "type": "object",
+      "required": [
+        "startUs",
+        "endUs",
+        "text"
+      ],
+      "properties": {
+        "startUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endUs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

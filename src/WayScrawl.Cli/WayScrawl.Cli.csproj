@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>wayscrawl</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/wayscrawl.SKILL.md" LogicalName="WayScrawl.Skill" />
+    <ProjectReference Include="../WayScrawl.Application/WayScrawl.Application.csproj" />
+    <ProjectReference Include="../WayScrawl.Transcription/WayScrawl.Transcription.csproj" />
+    <ProjectReference Include="../WayScrawl.Portal/WayScrawl.Portal.csproj" />
+    <ProjectReference Include="../WayScrawl.Wayland/WayScrawl.Wayland.csproj" />
+  </ItemGroup>
+</Project>
